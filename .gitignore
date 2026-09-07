@@ -1,0 +1,24 @@
+# Raw / merged / intermediate image data (heavy, not source)
+*.dng
+*.DNG
+*.nef
+*.NEF
+*.exr
+*.tif
+*.tiff
+merge-plan.json
+clips/
+# ...but the figures of the documentation are source
+!docs/**/*.jpg
+!docs/**/*.png
+
+__pycache__/
+*.pyc
+.venv/
+dist/
+build/
+*.egg-info/
+.DS_Store
+.env
+packaging/build/
+packaging/dist/

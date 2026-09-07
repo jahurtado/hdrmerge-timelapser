@@ -1,0 +1,55 @@
+[project]
+name = "hdrmerge-timelapser"
+version = "1.0.0"
+description = "Detect the bracketed sets of a timelapse and produce the merged sequence through HDRMerge. Scene-linear EXR, DNG or TIFF out."
+# No `readme` on purpose. It would put the whole file into the package as its
+# Description, and the package metadata travels inside the .app and the Windows
+# payload -- so the README of *this* checkout, the working one, would ship in
+# every bundle. eclipse-aligner has never declared one either.
+authors = [{ name = "Jose A. Hurtado" }]
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
+requires-python = ">=3.9"
+dependencies = [
+    "Pillow>=10",
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "tifffile>=2024.1.30",
+    "imagecodecs>=2024.1.1",
+    "rawpy>=0.19",
+    "colour-demosaicing>=0.2",  # Menon2007 (DDFAPD) high-quality demosaic
+]
+
+[project.urls]
+Homepage = "https://elcacharrista.com"
+
+[project.optional-dependencies]
+# The window is a Qt application. Behind an extra so a machine that only ever
+# detects and applies -- a render box, CI -- never installs a toolkit it has no
+# screen for.
+gui = ["PySide6>=6.6"]
+# Building the Windows bundle. No PyInstaller: the Windows build lays wheels
+# beside an embeddable CPython instead of freezing a binary (Defender truncates
+# PyInstaller's bootloader), so all it needs is the toolkit the window imports.
+# make-win.ps1 pip-installs the wheels into the embed, resolving them from this
+# same project; it fetches the lighter PySide6-Essentials rather than the extra
+# named here, which exists for parity with the gui route.
+win = ["PySide6>=6.6"]
+
+[project.scripts]
+hdrmerge-timelapser = "hdrmerge_timelapser.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# The icons are drawn by tools/icon.py and shipped with the package: the window
+# asks for them by size at runtime.
+[tool.hatch.build.targets.wheel]
+packages = ["src/hdrmerge_timelapser"]
+artifacts = ["src/hdrmerge_timelapser/icons/*"]
+
+[dependency-groups]
+packaging = [
+    "pyinstaller>=6.22.2",
+]
